@@ -16,7 +16,7 @@ export class ProductService {
   }
 
   addProduct(product: any): Observable<any> {
-    const token = localStorage.getItem('access_token'); // ✅ Añadir token
+    const token = localStorage.getItem('access_token');
     return this.http.post(`http://localhost:5000/products`, product, {
       headers: {
         'Content-Type': 'application/json',

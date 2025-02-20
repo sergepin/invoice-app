@@ -22,7 +22,7 @@ export class LoginService {
         next: (data) => {
           if (data.access_token) {
             localStorage.setItem('access_token', data.access_token);
-            localStorage.setItem('user', JSON.stringify(data.user)); // Guarda el usuario
+            localStorage.setItem('user', JSON.stringify(data.user));
             observer.next(data);
             observer.complete();
           } else {

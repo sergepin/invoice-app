@@ -52,7 +52,7 @@ export class ProductsComponent implements OnInit {
       next: (data: Product[]) => {
         this.products = data.map((product: Product) => ({
           ...product,
-          quantity: 1, // Agregamos la propiedad para selección de cantidad
+          quantity: 1,
         }));
       },
       error: (error) => console.error('Error al obtener productos', error),
@@ -98,7 +98,6 @@ export class ProductsComponent implements OnInit {
       return;
     }
 
-    // Buscar si el producto ya está en el carrito
     const existingItem = this.cart.find(item => item._id === product._id);
 
     if (existingItem) {

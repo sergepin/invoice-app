@@ -18,7 +18,7 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class LoginComponent {
   private loginService = inject(LoginService);
-  private authService = inject(AuthService); // 🔥 Inyectamos AuthService
+  private authService = inject(AuthService);
   private router = inject(Router);
   private formBuild = inject(FormBuilder);
 
@@ -39,7 +39,7 @@ export class LoginComponent {
       next: (data) => {
         if (data.access_token) {
           localStorage.setItem('access_token', data.access_token);
-          this.authService.setUser(data.user); // 🔥 Guarda el usuario en el servicio
+          this.authService.setUser(data.user);
           this.router.navigate(['home']);
         } else {
           alert('Error');

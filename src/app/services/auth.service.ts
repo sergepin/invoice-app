@@ -10,7 +10,7 @@ export class AuthService {
   private user: User | null = null;
 
   constructor() {
-    this.loadUserFromStorage(); // Carga el usuario al iniciar la app
+    this.loadUserFromStorage();
   }
 
   private loadUserFromStorage() {

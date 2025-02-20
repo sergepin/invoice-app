@@ -66,6 +66,7 @@ export class CheckoutComponent {
     this.checkoutService.checkout(checkoutData, this.accessToken).subscribe({
       next: response => {
         console.log('Purchase completed:', response);
+        this.router.navigate(['/home']);
       },
       error: err => console.error('Checkout error', err)
     });
