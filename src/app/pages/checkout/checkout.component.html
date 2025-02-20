@@ -1,0 +1,11 @@
+<div class="checkout-page">
+  <h2>Resumen de Compra</h2>
+  <div class="cart-items">
+    <div *ngFor="let item of cart" class="cart-item">
+      <p><strong>{{ item.name }}</strong></p>
+      <p>Cantidad: {{ item.quantity }}</p>
+      <p>Precio: ${{ item.price }}</p>
+    </div>
+  </div>
+  <button mat-raised-button color="primary" (click)="checkout()">Confirmar Compra</button>
+</div>

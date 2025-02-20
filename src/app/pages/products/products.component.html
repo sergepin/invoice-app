@@ -1,0 +1,45 @@
+<div class="products-layout">
+  <div class="button-row">
+    <button mat-raised-button color="primary" (click)="openAddProductDialog()" *ngIf="isAdmin">
+      Añadir Producto
+    </button>
+  </div>
+
+  <div class="products-container">
+    <mat-card *ngFor="let product of products" class="product-card">
+      <mat-card-header>
+        <mat-card-title>{{ product.name }}</mat-card-title>
+
+        <!-- Si es Admin, muestra el botón de edición -->
+        <button *ngIf="isAdmin" mat-icon-button color="primary" (click)="openEditProductDialog(product)">
+          <mat-icon>edit</mat-icon>
+        </button>
+
+        <!-- Si es User, muestra el botón de añadir al carrito -->
+        <div *ngIf="!isAdmin">
+          <mat-form-field appearance="outline" class="quantity-input">
+            <mat-label>Cantidad</mat-label>
+            <input matInput type="number" [(ngModel)]="product.quantity" min="1" [max]="product.stock">
+          </mat-form-field>
+          <button mat-icon-button color="accent" (click)="addToCart(product)">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content>
+        <p>{{ product.description }}</p>
+        <p><strong>Precio:</strong> ${{ product.price }}</p>
+        <p><strong>Stock:</strong> {{ product.stock }}</p>
+        <p><strong>Estado:</strong> {{ product.status }}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="checkout-container" *ngIf="!isAdmin && cart.length > 0">
+    <button mat-raised-button color="accent" (click)="goToCheckout()">
+      Checkout
+    </button>
+  </div>
+
+</div>
