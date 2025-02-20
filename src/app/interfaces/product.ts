@@ -6,7 +6,7 @@ export interface Product {
   stock: number;
   status: 'active' | 'inactive';
   __v: number;
-  quantity?: number; // Campo opcional para manejar la cantidad seleccionada
+  quantity?: number;
 }
 
 export type ProductList = Product[];

@@ -10,12 +10,10 @@
       <mat-card-header>
         <mat-card-title>{{ product.name }}</mat-card-title>
 
-        <!-- Si es Admin, muestra el botón de edición -->
         <button *ngIf="isAdmin" mat-icon-button color="primary" (click)="openEditProductDialog(product)">
           <mat-icon>edit</mat-icon>
         </button>
 
-        <!-- Si es User, muestra el botón de añadir al carrito -->
         <div *ngIf="!isAdmin">
           <mat-form-field appearance="outline" class="quantity-input">
             <mat-label>Cantidad</mat-label>
