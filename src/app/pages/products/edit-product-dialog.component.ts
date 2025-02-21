@@ -1,7 +1,12 @@
 import { Component, Inject, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,44 +14,91 @@ import { MatButtonModule } from '@angular/material/button';
 @Component({
   selector: 'app-edit-product-dialog',
   standalone: true,
-  imports: [CommonModule, MatFormFieldModule, MatInputModule, MatButtonModule, ReactiveFormsModule],
-  template: `
-    <h2>Editar Producto</h2>
-    <form [formGroup]="productForm">
-      <mat-form-field appearance="outline">
-        <mat-label>Nombre</mat-label>
-        <input matInput formControlName="name" />
-      </mat-form-field>
+  imports: [
+    CommonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    ReactiveFormsModule,
+  ],
+  template: `<div class="p-6 bg-white rounded-lg shadow-lg">
+    <h2 class="text-2xl font-semibold mb-4">Edit Product</h2>
+    <form [formGroup]="productForm" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Name</label>
+        <input
+          type="text"
+          formControlName="name"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300"
+        />
+      </div>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Descripción</mat-label>
-        <textarea matInput formControlName="description"></textarea>
-      </mat-form-field>
+      <div>
+        <label class="block text-sm font-medium text-gray-700"
+          >Description</label
+        >
+        <textarea
+          formControlName="description"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300"
+        ></textarea>
+      </div>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Precio</mat-label>
-        <input matInput type="number" formControlName="price" />
-      </mat-form-field>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Price</label>
+        <input
+          type="number"
+          formControlName="price"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300"
+        />
+      </div>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Stock</mat-label>
-        <input matInput type="number" formControlName="stock" />
-        <mat-error *ngIf="productForm.get('stock')?.invalid">El stock no puede ser negativo</mat-error>
-      </mat-form-field>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Stock</label>
+        <input
+          type="number"
+          formControlName="stock"
+          min="0"
+          step="1"
+          (keypress)="preventFloat($event)"
+          (change)="correctStockInput()"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300"
+        />
+        <p
+          *ngIf="productForm.get('stock')?.invalid"
+          class="text-red-500 text-sm mt-1"
+        >
+          Stock must be a whole number and cannot be negative
+        </p>
+      </div>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Estado</mat-label>
-        <input matInput formControlName="status" />
-      </mat-form-field>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Status</label>
+        <input
+          type="text"
+          formControlName="status"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300"
+        />
+      </div>
 
-      <div class="actions">
-        <button mat-button (click)="cancel()">Cancelar</button>
-        <button mat-raised-button color="primary" (click)="updateProduct()" [disabled]="productForm.invalid">
-          Actualizar
+      <div class="flex justify-end space-x-3 mt-6">
+        <button
+          type="button"
+          (click)="cancel()"
+          class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          (click)="updateProduct()"
+          [disabled]="productForm.invalid"
+          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition"
+        >
+          Update
         </button>
       </div>
     </form>
-  `,
+  </div> `,
   styles: [
     `
       form {
@@ -86,5 +138,18 @@ export class EditProductDialogComponent {
 
   cancel() {
     this.dialogRef.close();
+  }
+
+  preventFloat(event: KeyboardEvent) {
+    if (event.key === '.' || event.key === ',' || event.key === 'e') {
+      event.preventDefault();
+    }
+  }
+
+  correctStockInput() {
+    let stockControl = this.productForm.get('stock');
+    if (stockControl) {
+      stockControl.setValue(Math.floor(stockControl.value || 0));
+    }
   }
 }

@@ -42,4 +42,7 @@ export class RegisterComponent {
       error: (err) => console.error(err)
     });
   }
+  login() {
+    this.router.navigate(['/']);
+  }
 }

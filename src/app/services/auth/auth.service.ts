@@ -1,6 +1,8 @@
+import { jwtDecode } from 'jwt-decode';
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { User } from '../interfaces/login';
+import { User } from '../../interfaces/login';
+
 
 @Injectable({
   providedIn: 'root',
@@ -15,14 +17,19 @@ export class AuthService {
 
   private loadUserFromStorage() {
     const userData = localStorage.getItem('user');
-    if (userData) {
+    const token = localStorage.getItem('access_token');
+
+    if (userData && token && !this.isTokenExpired(token)) {
       this.user = JSON.parse(userData);
+    } else {
+      this.logout();
     }
   }
 
-  setUser(user: User) {
+  setUser(user: User, token: string) {
     this.user = user;
     localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('access_token', token);
   }
 
   getUser(): User | null {
@@ -31,6 +38,21 @@ export class AuthService {
 
   isAdmin(): boolean {
     return this.user?.role === 'admin';
+  }
+
+  isAuthenticated(): boolean {
+    const token = localStorage.getItem('access_token');
+    return token !== null && !this.isTokenExpired(token);
+  }
+
+  private isTokenExpired(token: string): boolean {
+    try {
+      const decoded: any = jwtDecode(token);
+      const currentTime = Math.floor(Date.now() / 1000);
+      return decoded.exp < currentTime;
+    } catch (error) {
+      return true;
+    }
   }
 
   logout() {

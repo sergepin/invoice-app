@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { SidebarComponent } from './sidebar.component';
 import { RouterOutlet } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../services/auth/auth.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -13,8 +13,7 @@ import { CommonModule } from '@angular/common';
       <app-sidebar></app-sidebar>
       <div class="content">
         <header class="header">
-          <span *ngIf="user">Bienvenido, {{ user.name }}</span>
-          <button (click)="logout()" class="logout-btn">Cerrar sesión</button>
+          <span *ngIf="user">Welcome, {{ user.name }}</span>
         </header>
         <router-outlet></router-outlet>
       </div>
@@ -24,13 +23,13 @@ import { CommonModule } from '@angular/common';
     `
       .layout {
         display: grid;
-        grid-template-columns: 250px 1fr; /* 250px fijo para el menú, el resto para el contenido */
+        grid-template-columns: 250px 1fr;
         height: 100vh;
       }
 
       .content {
         padding: 20px;
-        overflow-y: auto; /* Permite scroll si el contenido es muy grande */
+        overflow-y: auto;
         display: flex;
         flex-direction: column;
       }

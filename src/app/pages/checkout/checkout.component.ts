@@ -17,6 +17,8 @@ export class CheckoutComponent {
   userId: string | null = null;
   totalAmount: number = 0;
   accessToken: string | null = null;
+  isProcessing = false;
+  showToast = false;
 
   private router = inject(Router);
   private checkoutService = inject(CheckoutService);
@@ -52,6 +54,8 @@ export class CheckoutComponent {
       return;
     }
 
+    this.isProcessing = true;
+
     const checkoutData = {
       user_id: this.userId,
       products: this.cart.map(p => ({
@@ -66,10 +70,16 @@ export class CheckoutComponent {
     this.checkoutService.checkout(checkoutData, this.accessToken).subscribe({
       next: response => {
         console.log('Purchase completed:', response);
-        this.router.navigate(['/home']);
+        this.showToast = true;
+
+        setTimeout(() => {
+          this.router.navigate(['/home']);
+        }, 5000);
       },
-      error: err => console.error('Checkout error', err)
+      error: err => {
+        console.error('Checkout error', err);
+        this.isProcessing = false;
+      }
     });
   }
-
 }

@@ -1,24 +1,41 @@
-<div class="card-container">
-  <mat-card appearance="outlined">
-    <mat-card-header>
-      <mat-card-title> Login</mat-card-title>
-      <mat-card-subtitle>Please Log In</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-      <form class="form-custom" [formGroup]="loginForm">
-        <mat-form-field class="input-custom">
-          <mat-label>email</mat-label>
-          <input matInput type="text" formControlName="email">
-        </mat-form-field>
-        <mat-form-field class="input-custom">
-          <mat-label>password</mat-label>
-          <input matInput type="password" formControlName="password">
-        </mat-form-field>
-        <div class="flex">
-          <button mat-flat-button color="primary" (click)="login()">Log In</button>
-          <button mat-flat-button color="warn" (click)="register()" style="margin-left: 8px;">Register</button>
-        </div>
-      </form>
-    </mat-card-content>
-  </mat-card>
-</div>
+<section class="bg-gray-50 dark:bg-gray-900 h-screen flex items-center justify-center">
+  <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+    <div class="text-center mb-6">
+      <img class="w-12 h-12 mx-auto" src="/assets/phoenix-seeklogo.svg" alt="logo">
+      <h2 class="text-2xl font-bold text-gray-900">Sergio's App</h2>
+    </div>
+
+    <form class="space-y-4" [formGroup]="loginForm">
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-900">Your email</label>
+        <input type="email" id="email" formControlName="email"
+          class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+      </div>
+      <div>
+        <label for="password" class="block text-sm font-medium text-gray-900">Password</label>
+        <input type="password" id="password" formControlName="password"
+          class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+      </div>
+
+      <button
+        type="button"
+        (click)="login()"
+        [disabled]="isProcessing"
+        class="w-full flex items-center justify-center text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 transition disabled:bg-gray-400">
+        <span *ngIf="!isProcessing">Sign in</span>
+        <svg *ngIf="isProcessing" aria-hidden="true" class="w-5 h-5 animate-spin text-white" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+        </svg>
+      </button>
+
+      <p class="text-sm font-light text-gray-500">
+        Don’t have an account yet? <a (click)="register()" class="font-medium text-blue-600 hover:underline">Sign up</a>
+      </p>
+    </form>
+  </div>
+
+  <div *ngIf="showToast" class="fixed bottom-5 right-5 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg">
+    Login successful! Redirecting...
+  </div>
+</section>

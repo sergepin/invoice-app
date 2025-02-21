@@ -6,13 +6,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AddProductDialogComponent } from './add-product-dialog.component';
 import { EditProductDialogComponent } from './edit-product-dialog.component';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../services/auth/auth.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Product } from '../../interfaces/product';
-import {MatGridListModule} from '@angular/material/grid-list';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { Router } from '@angular/router';
 
 @Component({
@@ -27,6 +27,7 @@ import { Router } from '@angular/router';
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
+    ReactiveFormsModule,
     MatGridListModule
   ],
   templateUrl: './products.component.html',
@@ -37,11 +38,22 @@ export class ProductsComponent implements OnInit {
   private dialog = inject(MatDialog);
   private authService = inject(AuthService);
   private router = inject(Router);
-
+  private fb = inject(FormBuilder);
 
   products: any[] = [];
   isAdmin = this.authService.getUser()?.role === 'admin';
   cart: any[] = [];
+  productForm: FormGroup;
+
+  constructor() {
+    this.productForm = this.fb.group({
+      name: ['', Validators.required],
+      description: ['', Validators.required],
+      price: [0, [Validators.required, Validators.min(0)]],
+      stock: [1, [Validators.required, Validators.min(1), Validators.pattern(/^\d+$/)]],
+      status: ['active', Validators.required]
+    });
+  }
 
   ngOnInit() {
     this.loadProducts();
@@ -55,20 +67,20 @@ export class ProductsComponent implements OnInit {
           quantity: 1,
         }));
       },
-      error: (error) => console.error('Error al obtener productos', error),
+      error: (error) => console.error('Error fetching products', error),
     });
   }
 
   openAddProductDialog() {
     const dialogRef = this.dialog.open(AddProductDialogComponent, {
-      width: '400px',
+      width: '800px',
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.productService.addProduct(result).subscribe({
           next: () => this.loadProducts(),
-          error: (error) => console.error('Error al añadir producto', error),
+          error: (error) => console.error('Error adding product', error),
         });
       }
     });
@@ -84,7 +96,7 @@ export class ProductsComponent implements OnInit {
       if (updatedProduct) {
         this.productService.updateProduct(product._id, updatedProduct).subscribe({
           next: () => this.loadProducts(),
-          error: (error) => console.error('Error al editar producto', error),
+          error: (error) => console.error('Error updating product', error),
         });
       }
     });
@@ -94,7 +106,7 @@ export class ProductsComponent implements OnInit {
     const quantity = product.quantity;
 
     if (quantity < 1 || quantity > product.stock) {
-      alert('Cantidad no válida.');
+      alert('Invalid quantity.');
       return;
     }
 
@@ -104,7 +116,7 @@ export class ProductsComponent implements OnInit {
       const newQuantity = existingItem.quantity + quantity;
 
       if (newQuantity > product.stock) {
-        alert('No puedes agregar más de lo que hay en stock.');
+        alert('Cannot add more than available stock.');
         return;
       }
 
@@ -124,4 +136,6 @@ export class ProductsComponent implements OnInit {
   goToCheckout() {
     this.router.navigate(['/checkout'], { state: { cart: this.cart } });
   }
+
+
 }

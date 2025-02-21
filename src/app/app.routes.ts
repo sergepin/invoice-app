@@ -5,18 +5,22 @@ import { HomeComponent } from './pages/home/home.component';
 import { LayoutComponent } from './pages/layout/layout.component';
 import { ProductsComponent } from './pages/products/products.component';
 import { CheckoutComponent } from './pages/checkout/checkout.component';
+import { UsersComponent } from './pages/users/users.component';
+import { PublicGuard } from './guards/public.guard';
+import { AuthGuard } from './guards/auth.guard';
 
 
 export const routes: Routes = [
-  { path: '', component: LoginComponent },
+  { path: '', component: LoginComponent, canActivate: [PublicGuard] },
+  { path: 'register', component: RegisterComponent, canActivate: [PublicGuard] },
   {
     path: '',
     component: LayoutComponent,
     children: [
-      { path: 'register', component: RegisterComponent },
-      { path: 'home', component: HomeComponent },
-      { path: 'products', component: ProductsComponent},
-      { path: 'checkout', component: CheckoutComponent}
+      { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+      { path: 'products', component: ProductsComponent, canActivate: [AuthGuard] },
+      { path: 'checkout', component: CheckoutComponent, canActivate: [AuthGuard] },
+      { path: 'users', component: UsersComponent, canActivate: [AuthGuard] }
     ],
   },
 ];

@@ -1,43 +1,44 @@
 <div class="products-layout">
-  <div class="button-row">
-    <button mat-raised-button color="primary" (click)="openAddProductDialog()" *ngIf="isAdmin">
-      Añadir Producto
+  <div class="flex justify-end p-4">
+    <button *ngIf="isAdmin" (click)="openAddProductDialog()"
+      class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition">
+      + Add Product
     </button>
   </div>
 
   <div class="products-container">
-    <mat-card *ngFor="let product of products" class="product-card">
-      <mat-card-header>
-        <mat-card-title>{{ product.name }}</mat-card-title>
+    <div *ngFor="let product of products" class="max-w-sm p-6 bg-stone-300 border border-gray-200 rounded-lg shadow-sm hover:bg-stone-4 00">
+      <div class="flex justify-between items-center mb-4">
+        <h5 class="text-2xl font-bold tracking-tight text-gray-90">{{ product.name }}</h5>
 
-        <button *ngIf="isAdmin" mat-icon-button color="primary" (click)="openEditProductDialog(product)">
+        <button *ngIf="isAdmin" class="p-2 text-blue-500 hover:text-blue-700" (click)="openEditProductDialog(product)">
           <mat-icon>edit</mat-icon>
         </button>
+      </div>
 
-        <div *ngIf="!isAdmin">
-          <mat-form-field appearance="outline" class="quantity-input">
-            <mat-label>Cantidad</mat-label>
-            <input matInput type="number" [(ngModel)]="product.quantity" min="1" [max]="product.stock">
-          </mat-form-field>
-          <button mat-icon-button color="accent" (click)="addToCart(product)">
-            <mat-icon>add</mat-icon>
-          </button>
-        </div>
-      </mat-card-header>
+      <p class="font-normal text-gray-700 ">{{ product.description }}</p>
+      <p class="font-semibold text-gray-900 ">💰 Price: ${{ product.price }}</p>
+      <p class="text-gray-700 ">📦 Stock: {{ product.stock }}</p>
 
-      <mat-card-content>
-        <p>{{ product.description }}</p>
-        <p><strong>Precio:</strong> ${{ product.price }}</p>
-        <p><strong>Stock:</strong> {{ product.stock }}</p>
-        <p><strong>Estado:</strong> {{ product.status }}</p>
-      </mat-card-content>
-    </mat-card>
+      <div *ngIf="!isAdmin" class="mt-4 flex items-center gap-2">
+        <input type="number" [(ngModel)]="product.quantity" min="1" [max]="product.stock"
+          class="w-20 p-2 border rounded-md text-gray-900 bg-amber-50" />
+
+        <button class="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600" (click)="addToCart(product)">
+          Add to cart
+        </button>
+      </div>
+    </div>
+
   </div>
 
   <div class="checkout-container" *ngIf="!isAdmin && cart.length > 0">
-    <button mat-raised-button color="accent" (click)="goToCheckout()">
+    <button
+      class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition-all"
+      (click)="goToCheckout()">
       Checkout
     </button>
   </div>
+
 
 </div>
