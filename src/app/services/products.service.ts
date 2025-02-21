@@ -1,3 +1,4 @@
+import { appSettings } from './../settings/app.settings';
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -7,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class ProductService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:5000/products';
+  private apiUrl = `${appSettings.apiUrl}/products`;
 
   getProducts(): Observable<any> {
     const token = localStorage.getItem('access_token');
@@ -17,7 +18,7 @@ export class ProductService {
 
   addProduct(product: any): Observable<any> {
     const token = localStorage.getItem('access_token');
-    return this.http.post(`http://localhost:5000/products`, product, {
+    return this.http.post(this.apiUrl, product, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
@@ -27,13 +28,11 @@ export class ProductService {
 
   updateProduct(id: string, product: any): Observable<any> {
     const token = localStorage.getItem('access_token');
-    return this.http.patch(`http://localhost:5000/products/${id}`, product, {
+    return this.http.patch(`${this.apiUrl}/${id}`, product, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
     });
   }
-
-
 }

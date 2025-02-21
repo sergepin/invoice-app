@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { appSettings } from '../../settings/app.settings';
 
 interface UserPurchase {
   userId: string;
@@ -33,8 +34,9 @@ export class UsersComponent implements OnInit {
     }
 
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const apiUrl = `${appSettings.apiUrl}/orders/all-users-purchases-last-month`;
 
-    this.http.get<{ purchases: UserPurchase[] }>('http://localhost:5000/orders/all-users-purchases-last-month', { headers })
+    this.http.get<{ purchases: UserPurchase[] }>(apiUrl, { headers })
       .subscribe({
         next: (response) => {
           console.log('API Response:', response);
@@ -45,5 +47,4 @@ export class UsersComponent implements OnInit {
         }
       });
   }
-
 }

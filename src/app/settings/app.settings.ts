@@ -1,3 +1,5 @@
+import { environment } from '../environments/environment';
+
 export const appSettings = {
-  apiUrl: "http://localhost:5000"
+  apiUrl: environment.apiUrl
 };

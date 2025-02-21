@@ -1,3 +1,4 @@
+import { appSettings } from './../settings/app.settings';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -6,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class InvoiceService {
-  private apiUrl = 'http://localhost:5000/invoices';
+  private apiUrl = `${appSettings.apiUrl}/invoices`;
 
   constructor(private http: HttpClient) {}
 
