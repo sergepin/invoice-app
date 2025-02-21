@@ -1,1 +1,39 @@
-<p>home works!</p>
+<div class="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
+  <div class="max-w-2xl w-full bg-white shadow-lg rounded-2xl p-8">
+    <h1 class="text-3xl font-bold text-center text-gray-800">Welcome to invoice app!</h1>
+    <p class="mt-4 text-lg text-center text-gray-600">
+      I'm <span class="font-semibold text-gray-800">Sergio Pinzón</span>, a developer from Colombia.
+    </p>
+
+    <div class="mt-6 p-4 bg-blue-100 rounded-lg shadow">
+      <h2 class="text-xl font-semibold text-blue-700 text-center">Login Information</h2>
+      <p class="text-gray-700 mt-2 text-center">
+        To access as an administrator, use the following credentials:
+      </p>
+      <div class="mt-2 text-center">
+        <span class="font-semibold text-gray-900">User:</span> admin@admin.com<br>
+        <span class="font-semibold text-gray-900">Password:</span> 123456
+      </div>
+    </div>
+
+    <div class="mt-6">
+      <h2 class="text-xl font-semibold text-gray-800 text-center">Features Based on Your Role</h2>
+      <div *ngIf="isAdmin; else userFeatures" class="mt-4 p-4 bg-green-100 rounded-lg shadow">
+        <h3 class="text-lg font-semibold text-green-700">Admin Mode</h3>
+        <p class="text-gray-700 mt-2">
+          As an administrator, you can edit products, but <span class="font-semibold">you cannot add new ones</span>.
+          You will also have access to exclusive administrative options.
+        </p>
+      </div>
+
+      <ng-template #userFeatures>
+        <div class="mt-4 p-4 bg-yellow-100 rounded-lg shadow">
+          <h3 class="text-lg font-semibold text-yellow-700">User Mode</h3>
+          <p class="text-gray-700 mt-2">
+            As a user, you can <span class="font-semibold">add products to the cart</span> and complete purchases using the checkout system.
+          </p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>
