@@ -7,18 +7,18 @@
   </div>
 
   <div class="products-container">
-    <div *ngFor="let product of products" class="max-w-sm p-6 bg-stone-300 border border-gray-200 rounded-lg shadow-sm hover:bg-stone-4 00">
+    <div *ngFor="let product of products" class="max-w-sm p-6 bg-stone-300 border border-gray-200 rounded-lg shadow-sm hover:bg-stone-400">
       <div class="flex justify-between items-center mb-4">
-        <h5 class="text-2xl font-bold tracking-tight text-gray-90">{{ product.name }}</h5>
+        <h5 class="text-2xl font-bold tracking-tight text-gray-900">{{ product.name }}</h5>
 
         <button *ngIf="isAdmin" class="p-2 text-blue-500 hover:text-blue-700" (click)="openEditProductDialog(product)">
           <mat-icon>edit</mat-icon>
         </button>
       </div>
 
-      <p class="font-normal text-gray-700 ">{{ product.description }}</p>
-      <p class="font-semibold text-gray-900 ">💰 Price: ${{ product.price }}</p>
-      <p class="text-gray-700 ">📦 Stock: {{ product.stock }}</p>
+      <p class="font-normal text-gray-700">{{ product.description }}</p>
+      <p class="font-semibold text-gray-900">💰 Price: ${{ product.price }}</p>
+      <p class="text-gray-700">📦 Stock: {{ product.stock }}</p>
 
       <div *ngIf="!isAdmin" class="mt-4 flex items-center gap-2">
         <input type="number" [(ngModel)]="product.quantity" min="1" [max]="product.stock"
@@ -29,16 +29,16 @@
         </button>
       </div>
     </div>
-
   </div>
 
-  <div class="checkout-container" *ngIf="!isAdmin && cart.length > 0">
+  <div *ngIf="!isAdmin && cart.length > 0" class="fixed bottom-5 right-5">
     <button
-      class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition-all"
-      (click)="goToCheckout()">
-      Checkout
+      class="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-semibold py-3 px-6 rounded-full shadow-xl transition-all flex items-center gap-3"
+      (click)="goToCheckout()"
+      >
+      <mat-icon class="text-3xl">shopping_cart</mat-icon>
+      <span>Checkout</span>
+      <span class="bg-white text-blue-600 font-bold px-2 py-1 rounded-full">{{ cart.length }}</span>
     </button>
   </div>
-
-
 </div>

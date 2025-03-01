@@ -123,7 +123,9 @@ export class ProductsComponent implements OnInit {
     const quantity = product.quantity;
 
     if (quantity < 1 || quantity > product.stock) {
-      this.toastr.warning('Invalid quantity.', 'Warning');
+      this.toastr.warning('Invalid quantity.', 'Warning', {
+        positionClass: 'toast-top-right'
+      });
       return;
     }
 
@@ -133,7 +135,9 @@ export class ProductsComponent implements OnInit {
       const newQuantity = existingItem.quantity + quantity;
 
       if (newQuantity > product.stock) {
-        this.toastr.warning('Cannot add more than available stock.', 'Warning');
+        this.toastr.warning('Cannot add more than available stock.', 'Warning', {
+          positionClass: 'toast-top-right'
+        });
         return;
       }
 
@@ -147,7 +151,9 @@ export class ProductsComponent implements OnInit {
       });
     }
 
-    this.toastr.success(`${product.name} added to cart!`, 'Success');
+    this.toastr.success(`${product.name} added to cart!`, 'Success', {
+      positionClass: 'toast-top-right'
+    });
     console.log('Cart:', this.cart);
   }
 

@@ -19,6 +19,10 @@ export class UserService {
     return this.http.get(this.apiUrl, { headers: this.getAuthHeaders() });
   }
 
+  getUserById(userId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${userId}`, { headers: this.getAuthHeaders() });
+  }
+
   updateUser(userId: string, payload: { name?: string; email?: string; password?: string; role?: 'user' | 'admin' }): Observable<any> {
     console.log('Updating user with ID:', userId);
     console.log('Payload:', payload);

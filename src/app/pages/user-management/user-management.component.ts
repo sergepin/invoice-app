@@ -53,7 +53,7 @@ export class UserManagementComponent implements OnInit {
   }
 
   openEditModal(user: manageUser): void {
-    if (this.showEditModal) return; // Evita abrir el modal si ya está abierto
+    if (this.showEditModal) return;
     this.selectedUser = { ...user };
     this.password = '';
     this.showEditModal = true;

@@ -12,9 +12,6 @@ import { CommonModule } from '@angular/common';
     <div class="layout">
       <app-sidebar></app-sidebar>
       <div class="content">
-        <header class="header">
-          <span *ngIf="user">Welcome, {{ user.name }}</span>
-        </header>
         <router-outlet></router-outlet>
       </div>
     </div>

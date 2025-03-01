@@ -4,6 +4,7 @@ import { CheckoutService } from '../../services/checkout.service';
 import { InvoiceService } from '../../services/invoice.service';
 import { CartProduct } from '../../interfaces/cart-product';
 import { CommonModule } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-checkout',
@@ -18,11 +19,11 @@ export class CheckoutComponent {
   totalAmount: number = 0;
   accessToken: string | null = null;
   isProcessing = false;
-  showToast = false;
 
   private router = inject(Router);
   private checkoutService = inject(CheckoutService);
   private invoiceService = inject(InvoiceService);
+  private toastr = inject(ToastrService);
 
   constructor() {
     const navigation = this.router.getCurrentNavigation();
@@ -50,7 +51,7 @@ export class CheckoutComponent {
 
   checkout() {
     if (!this.userId || !this.accessToken) {
-      console.error('User not authenticated or missing token');
+      this.toastr.error('User not authenticated or missing token', 'Error');
       return;
     }
 
@@ -65,19 +66,17 @@ export class CheckoutComponent {
       date: new Date().toISOString()
     };
 
-    console.log(checkoutData);
-
     this.checkoutService.checkout(checkoutData, this.accessToken).subscribe({
-      next: response => {
-        console.log('Purchase completed:', response);
-        this.showToast = true;
+      next: () => {
+        this.toastr.success('Purchase successful! Redirecting...', 'Success');
 
         setTimeout(() => {
           this.router.navigate(['/home']);
         }, 5000);
       },
-      error: err => {
+      error: (err) => {
         console.error('Checkout error', err);
+        this.toastr.error('Checkout failed. Please try again.', 'Error');
         this.isProcessing = false;
       }
     });

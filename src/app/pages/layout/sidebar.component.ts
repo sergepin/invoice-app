@@ -34,7 +34,6 @@ import { AuthService } from '../../services/auth/auth.service';
             </a>
           </li>
           <li *ngIf="user?.role === 'admin'">
-          <li>
             <a
               routerLink="/users"
               routerLinkActive="active"
@@ -44,13 +43,21 @@ import { AuthService } from '../../services/auth/auth.service';
             </a>
           </li>
           <li *ngIf="user?.role === 'admin'">
-          <li>
             <a
               routerLink="/user-management"
               routerLinkActive="active"
               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
             >
               <span class="ms-3">User Management</span>
+            </a>
+          </li>
+          <li>
+            <a
+              routerLink="/profile"
+              routerLinkActive="active"
+              class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+            >
+              <span class="ms-3">Profile</span>
             </a>
           </li>
         </ul>
