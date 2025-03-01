@@ -41,6 +41,7 @@ export class ProductsComponent implements OnInit {
   private router = inject(Router);
   private fb = inject(FormBuilder);
   private toastr = inject(ToastrService);
+  isLoading = false;
 
   products: any[] = [];
   isAdmin = this.authService.getUser()?.role === 'admin';
@@ -62,12 +63,14 @@ export class ProductsComponent implements OnInit {
   }
 
   loadProducts() {
+    this.isLoading = true;
     this.productService.getProducts().subscribe({
       next: (data: Product[]) => {
         this.products = data.map((product: Product) => ({
           ...product,
           quantity: 1,
         }));
+        this.isLoading = false;
       },
       error: (error) => {
         console.error('Error fetching products', error);

@@ -1,50 +1,92 @@
+import { OrdersService } from './../../services/orders.service';
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { appSettings } from '../../settings/app.settings';
 
-interface UserPurchase {
-  userId: string;
+interface Product {
+  productId: string;
   name: string;
-  email: string;
-  totalPurchases: number;
+  unitPrice: number;
+  quantity: number;
+}
+
+interface Order {
+  orderId: string;
+  user: {
+    id: string;
+    name: string;
+  };
+  totalAmount: number;
+  date: Date;
+  products: Product[];
+  isExpanded?: boolean;
 }
 
 @Component({
   selector: 'app-users',
   imports: [CommonModule],
   templateUrl: './users.component.html',
-  styleUrls: ['./users.component.css']
+  styleUrls: ['./users.component.css'],
 })
 export class UsersComponent implements OnInit {
-  users: UserPurchase[] = [];
+  orders: Order[] = [];
+  isLoading = false;
+  currentPage = 1;
+  itemsPerPage = 15;
+  totalOrders = 0;
 
-  constructor(private http: HttpClient) {}
+  constructor(private ordersService: OrdersService) {}
 
   ngOnInit(): void {
-    this.getUsersWithPurchases();
+    this.getOrders();
   }
 
-  getUsersWithPurchases(): void {
-    const token = localStorage.getItem('access_token');
+  getOrders(): void {
+    this.isLoading = true;
+    this.ordersService.getAllOrdersWithDetails().subscribe({
+      next: (response) => {
+        this.orders = response.orders.map((order) => {
+          return {
+            ...order,
+            date: new Date(order.date),
+            isExpanded: false,
+            user: { id: order.userId, name: order.user.name },
+          };
+        });
 
-    if (!token) {
-      console.error('No access token found');
-      return;
+        this.orders.sort((a, b) => b.date.getTime() - a.date.getTime());
+
+        this.totalOrders = this.orders.length;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching orders', error);
+        this.isLoading = false;
+      },
+    });
+  }
+
+  toggleOrder(order: Order): void {
+    order.isExpanded = !order.isExpanded;
+  }
+
+  paginatedOrders(): Order[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.orders.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
     }
+  }
 
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    const apiUrl = `${appSettings.apiUrl}/orders/all-users-purchases-last-month`;
+  nextPage(): void {
+    if (this.currentPage < this.totalPages()) {
+      this.currentPage++;
+    }
+  }
 
-    this.http.get<{ purchases: UserPurchase[] }>(apiUrl, { headers })
-      .subscribe({
-        next: (response) => {
-          console.log('API Response:', response);
-          this.users = response.purchases;
-        },
-        error: (error) => {
-          console.error('Error fetching users', error);
-        }
-      });
+  totalPages(): number {
+    return Math.ceil(this.totalOrders / this.itemsPerPage);
   }
 }

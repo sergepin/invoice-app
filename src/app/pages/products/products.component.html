@@ -6,7 +6,12 @@
     </button>
   </div>
 
-  <div class="products-container">
+  <!-- Loader -->
+  <div *ngIf="isLoading" class="flex justify-center items-center py-8">
+    <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+  </div>
+
+  <div *ngIf="!isLoading" class="products-container">
     <div *ngFor="let product of products" class="max-w-sm p-6 bg-stone-300 border border-gray-200 rounded-lg shadow-sm hover:bg-stone-400">
       <div class="flex justify-between items-center mb-4">
         <h5 class="text-2xl font-bold tracking-tight text-gray-900">{{ product.name }}</h5>

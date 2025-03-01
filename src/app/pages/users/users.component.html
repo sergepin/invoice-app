@@ -1,27 +1,91 @@
-<div class="w-full max-w-md p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-  <div class="flex items-center justify-between mb-4">
-    <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">Latest Customers</h5>
+<div class="w-full max-w-full p-6 bg-gray-100 border border-gray-200 rounded-lg shadow-lg sm:p-8 transition-all duration-300 ease-in-out">
+  <div class="flex items-center justify-between mb-6">
+    <h5 class="text-2xl font-bold leading-none text-gray-900">Orders History</h5>
+    <div class="text-sm text-gray-600">
+      Page {{ currentPage }} of {{ totalPages() }}
+    </div>
   </div>
-  <div class="flow-root">
-    <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
-      <li *ngFor="let user of users" class="py-3 sm:py-4">
-        <div class="flex items-center">
-          <div class="shrink-0">
-            <img class="w-8 h-8 rounded-full" src="https://ui-avatars.com/api/?name={{user.name}}&background=random" alt="{{ user.name }}">
+
+  <!-- Cargando -->
+  <div *ngIf="isLoading" class="flex justify-center items-center py-8">
+    <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500"></div>
+  </div>
+
+  <div *ngIf="!isLoading" class="flow-root">
+    <ul role="list" class="divide-y divide-gray-200">
+      <li *ngFor="let order of paginatedOrders()" class="py-4 sm:py-5 hover:bg-gray-200 cursor-pointer transition-all duration-300 ease-in-out" (click)="toggleOrder(order)">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <!-- Inicial del usuario como ícono -->
+            <div class="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center text-xl font-semibold">
+              {{ order.user.name.charAt(0).toUpperCase() }}
+            </div>
+            <div class="ml-4">
+              <p class="text-sm font-medium text-gray-900">
+                {{ order.date | date: 'mediumDate' }}
+              </p>
+              <p class="text-sm text-gray-600">
+                {{ order.products.length }} items
+              </p>
+            </div>
+            <div>
+              <p class="text-sm font-medium text-gray-900">
+                {{ order.user.name }}
+              </p>
+              <p class="text-xs text-gray-500">
+                User who placed the order
+              </p>
+            </div>
           </div>
-          <div class="flex-1 min-w-0 ms-4">
-            <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-              {{ user.name }}
-            </p>
-            <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-              {{ user.email }}
-            </p>
+          <div class="flex items-center space-x-4">
+            <span class="text-base font-semibold text-gray-900">
+              ${{ order.totalAmount.toFixed(2) }}
+            </span>
+            <svg class="w-4 h-4 transform transition-transform duration-300" [class.rotate-180]="order.isExpanded" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
           </div>
-          <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-            {{ user.totalPurchases }}
+        </div>
+
+        <!-- Detalles del Pedido -->
+        <div *ngIf="order.isExpanded" class="mt-4 pl-12">
+          <div class="border-l-2 border-gray-200 pl-4">
+            <h6 class="text-sm font-semibold mb-2 text-gray-700">Products:</h6>
+            <div *ngFor="let product of order.products" class="mb-3">
+              <p class="text-sm text-gray-700">
+                {{ product.name }} (x{{ product.quantity }})
+              </p>
+              <p class="text-xs text-gray-500">
+                ${{ product.unitPrice.toFixed(2) }} each
+              </p>
+            </div>
           </div>
         </div>
       </li>
     </ul>
+
+    <!-- No hay órdenes -->
+    <div *ngIf="!isLoading && orders.length === 0" class="text-center py-4">
+      <p class="text-gray-600">No orders found</p>
+    </div>
+
+    <!-- Paginación -->
+    <div *ngIf="totalPages() > 1" class="flex justify-between items-center mt-6">
+      <button
+        class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-all duration-300 ease-in-out"
+        (click)="previousPage()"
+        [disabled]="currentPage === 1">
+        Previous
+      </button>
+      <span class="text-sm text-gray-700">
+        Page {{ currentPage }} of {{ totalPages() }}
+      </span>
+      <button
+        class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-all duration-300 ease-in-out"
+        (click)="nextPage()"
+        [disabled]="currentPage === totalPages()">
+        Next
+      </button>
+    </div>
   </div>
 </div>
