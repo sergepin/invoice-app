@@ -1,12 +1,10 @@
 <div class="p-6 relative">
   <h1 class="text-3xl font-extrabold mb-8 text-center text-blue-600">My Orders</h1>
 
-  <!-- Loader -->
   <div *ngIf="loading" class="flex justify-center items-center">
     <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500"></div>
   </div>
 
-  <!-- Orders List -->
   <div *ngIf="!loading && orders.length > 0; else noOrders" class="space-y-6">
     <div *ngFor="let order of orders" class="bg-white shadow-lg rounded-xl p-6 hover:shadow-2xl transition-shadow">
       <p class="text-xl font-semibold text-gray-800">Order: {{ order.orderId }}</p>
@@ -21,12 +19,10 @@
     </div>
   </div>
 
-  <!-- No Orders Template -->
   <ng-template #noOrders>
     <p class="text-gray-600 text-center" *ngIf="!loading">You have no recent orders.</p>
   </ng-template>
 
-  <!-- Order Details Modal -->
   <div *ngIf="selectedOrder" class="fixed inset-0 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="bg-white p-8 rounded-xl shadow-2xl max-w-2xl w-full relative animate-fadeIn">
       <button (click)="hideOrderDetails()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800">✖</button>

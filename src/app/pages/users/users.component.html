@@ -6,7 +6,6 @@
     </div>
   </div>
 
-  <!-- Cargando -->
   <div *ngIf="isLoading" class="flex justify-center items-center py-8">
     <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500"></div>
   </div>
@@ -16,7 +15,7 @@
       <li *ngFor="let order of paginatedOrders()" class="py-4 sm:py-5 hover:bg-gray-200 cursor-pointer transition-all duration-300 ease-in-out" (click)="toggleOrder(order)">
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-4">
-            <!-- Inicial del usuario como ícono -->
+
             <div class="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center text-xl font-semibold">
               {{ order.user.name.charAt(0).toUpperCase() }}
             </div>
@@ -47,7 +46,7 @@
           </div>
         </div>
 
-        <!-- Detalles del Pedido -->
+
         <div *ngIf="order.isExpanded" class="mt-4 pl-12">
           <div class="border-l-2 border-gray-200 pl-4">
             <h6 class="text-sm font-semibold mb-2 text-gray-700">Products:</h6>
@@ -64,12 +63,10 @@
       </li>
     </ul>
 
-    <!-- No hay órdenes -->
     <div *ngIf="!isLoading && orders.length === 0" class="text-center py-4">
       <p class="text-gray-600">No orders found</p>
     </div>
 
-    <!-- Paginación -->
     <div *ngIf="totalPages() > 1" class="flex justify-between items-center mt-6">
       <button
         class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-all duration-300 ease-in-out"

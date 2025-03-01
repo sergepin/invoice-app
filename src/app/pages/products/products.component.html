@@ -6,7 +6,6 @@
     </button>
   </div>
 
-  <!-- Loader -->
   <div *ngIf="isLoading" class="flex justify-center items-center py-8">
     <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
   </div>
@@ -24,6 +23,12 @@
       <p class="font-normal text-gray-700">{{ product.description }}</p>
       <p class="font-semibold text-gray-900">💰 Price: ${{ product.price }}</p>
       <p class="text-gray-700">📦 Stock: {{ product.stock }}</p>
+
+      <p *ngIf="isAdmin" class="font-semibold text-gray-700 mt-2">
+        Status: <span [ngClass]="{'text-green-500': product.status === 'active', 'text-red-500': product.status === 'inactive'}">
+          {{ product.status === 'active' ? 'Active' : 'Inactive' }}
+        </span>
+      </p>
 
       <div *ngIf="!isAdmin" class="mt-4 flex items-center gap-2">
         <input type="number" [(ngModel)]="product.quantity" min="1" [max]="product.stock"

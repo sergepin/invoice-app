@@ -1,8 +1,7 @@
-<div class="max-w-xl mx-auto mt-10 p-8 bg-white rounded-xl shadow-lg">
+<div *ngIf="profileForm" class="max-w-xl mx-auto mt-10 p-8 bg-white rounded-xl shadow-lg">
   <h2 class="text-2xl font-bold mb-6 text-center">My Profile</h2>
 
   <form [formGroup]="profileForm" (ngSubmit)="updateProfile()" class="space-y-6">
-    <!-- Name Input -->
     <div>
       <label for="name" class="block font-medium mb-2">Name:</label>
       <input
@@ -14,7 +13,6 @@
       />
     </div>
 
-    <!-- Email Input -->
     <div>
       <label for="email" class="block font-medium mb-2">Email:</label>
       <input
@@ -26,7 +24,6 @@
       />
     </div>
 
-    <!-- Password Input (Optional) -->
     <div>
       <label for="password" class="block font-medium mb-2">Password (optional):</label>
       <input
@@ -38,7 +35,6 @@
       />
     </div>
 
-    <!-- Action Buttons -->
     <div class="flex justify-between items-center">
       <button
         type="submit"

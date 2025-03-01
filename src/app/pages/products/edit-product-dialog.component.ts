@@ -7,8 +7,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
@@ -16,10 +14,8 @@ import { MatButtonModule } from '@angular/material/button';
   standalone: true,
   imports: [
     CommonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
     ReactiveFormsModule,
+    MatButtonModule,
   ],
   template: `<div class="p-6 bg-white rounded-lg shadow-lg">
     <h2 class="text-2xl font-semibold mb-4">Edit Product</h2>
@@ -34,9 +30,7 @@ import { MatButtonModule } from '@angular/material/button';
       </div>
 
       <div>
-        <label class="block text-sm font-medium text-gray-700"
-          >Description</label
-        >
+        <label class="block text-sm font-medium text-gray-700">Description</label>
         <textarea
           formControlName="description"
           class="w-full p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300"
@@ -73,11 +67,32 @@ import { MatButtonModule } from '@angular/material/button';
 
       <div>
         <label class="block text-sm font-medium text-gray-700">Status</label>
-        <input
-          type="text"
-          formControlName="status"
-          class="w-full p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300"
-        />
+        <div class="flex items-center gap-4">
+          <label class="inline-flex items-center">
+            <input
+              type="radio"
+              formControlName="status"
+              value="active"
+              class="form-radio text-blue-600"
+            />
+            <span class="ml-2">Active</span>
+          </label>
+          <label class="inline-flex items-center">
+            <input
+              type="radio"
+              formControlName="status"
+              value="inactive"
+              class="form-radio text-gray-500"
+            />
+            <span class="ml-2">Inactive</span>
+          </label>
+        </div>
+        <p
+          *ngIf="productForm.get('status')?.invalid"
+          class="text-red-500 text-sm mt-1"
+        >
+          Please select a status
+        </p>
       </div>
 
       <div class="flex justify-end space-x-3 mt-6">
@@ -98,21 +113,8 @@ import { MatButtonModule } from '@angular/material/button';
         </button>
       </div>
     </form>
-  </div> `,
-  styles: [
-    `
-      form {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-      }
-      .actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-      }
-    `,
-  ],
+  </div>`,
+  styles: [],
 })
 export class EditProductDialogComponent {
   private dialogRef = inject(MatDialogRef<EditProductDialogComponent>);

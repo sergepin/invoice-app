@@ -66,10 +66,17 @@ export class ProductsComponent implements OnInit {
     this.isLoading = true;
     this.productService.getProducts().subscribe({
       next: (data: Product[]) => {
-        this.products = data.map((product: Product) => ({
+        if (!this.isAdmin) {
+          this.products = data.filter(product => product.status === 'active');
+        } else {
+          this.products = data;
+        }
+
+        this.products = this.products.map((product: Product) => ({
           ...product,
           quantity: 1,
         }));
+
         this.isLoading = false;
       },
       error: (error) => {
@@ -157,7 +164,6 @@ export class ProductsComponent implements OnInit {
     this.toastr.success(`${product.name} added to cart!`, 'Success', {
       positionClass: 'toast-top-right'
     });
-    console.log('Cart:', this.cart);
   }
 
   goToCheckout() {

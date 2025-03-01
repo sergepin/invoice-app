@@ -24,13 +24,10 @@ export class UserService {
   }
 
   updateUser(userId: string, payload: { name?: string; email?: string; password?: string; role?: 'user' | 'admin' }): Observable<any> {
-    console.log('Updating user with ID:', userId);
-    console.log('Payload:', payload);
     return this.http.patch(`${this.apiUrl}/${userId}`, payload, { headers: this.getAuthHeaders() });
   }
 
   deleteUser(userId: string): Observable<any> {
-    console.log('Deleting user with ID:', userId);
     return this.http.delete(`${this.apiUrl}/${userId}`, { headers: this.getAuthHeaders() });
   }
 }
