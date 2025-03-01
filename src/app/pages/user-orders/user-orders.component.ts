@@ -10,7 +10,7 @@ interface Order {
     productId: string;
     name: string;
     unitPrice: number;
-    quantity: number
+    quantity: number;
   }[];
 }
 
@@ -23,6 +23,7 @@ interface Order {
 export class UserOrdersComponent implements OnInit {
   orders: Order[] = [];
   selectedOrder: Order | null = null;
+  loading: boolean = true;
 
   constructor(private ordersService: OrdersService) {}
 
@@ -37,11 +38,17 @@ export class UserOrdersComponent implements OnInit {
         next: (response: { purchases: Order[] }) => {
           this.orders = response.purchases.map((order: Order) => ({
             ...order,
-            date: this.formatDate(order.date)
+            date: this.formatDate(order.date),
           }));
+          this.loading = false;
         },
-        error: (err) => console.error('Error fetching orders:', err),
+        error: (err) => {
+          console.error('Error fetching orders:', err);
+          this.loading = false;
+        },
       });
+    } else {
+      this.loading = false;
     }
   }
 

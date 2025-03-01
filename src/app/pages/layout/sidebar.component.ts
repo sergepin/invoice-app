@@ -9,69 +9,39 @@ import { AuthService } from '../../services/auth/auth.service';
   imports: [RouterModule, CommonModule],
   template: `
     <nav
-      id="default-sidebar"
-      class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
+      id="sidebar"
+      class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 bg-gray-50 dark:bg-gray-800"
       aria-label="Sidebar"
     >
-      <div class="flex flex-col h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800 overflow-hidden">
-        <ul class="space-y-2 font-medium">
-          <li>
-            <a
-              routerLink="/home"
-              routerLinkActive="active"
-              class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-            >
-              <span class="ms-3">Home</span>
-            </a>
-          </li>
-          <li>
-            <a
-              routerLink="/products"
-              routerLinkActive="active"
-              class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-            >
-              <span class="ms-3">Products</span>
-            </a>
-          </li>
-          <li *ngIf="user?.role === 'admin'">
-            <a
-              routerLink="/users"
-              routerLinkActive="active"
-              class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-            >
-              <span class="ms-3">User Purchases</span>
-            </a>
-          </li>
-          <li *ngIf="user?.role === 'admin'">
-            <a
-              routerLink="/user-management"
-              routerLinkActive="active"
-              class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-            >
-              <span class="ms-3">User Management</span>
-            </a>
-          </li>
-          <li>
-            <a
-              routerLink="/profile"
-              routerLinkActive="active"
-              class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-            >
-              <span class="ms-3">Profile</span>
-            </a>
-          </li>
+      <div class="flex flex-col h-full px-4 py-6">
+        <a routerLink="/home" class="flex justify-center items-center mb-6">
+          <img src="assets/phoenix-seeklogo.png" alt="Phoenix Logo" class="h-16 w-auto" />
+        </a>
 
-          <li *ngIf="user?.role !== 'admin'">
+        <div class="text-gray-700 dark:text-gray-300 mb-4">
+          <p>Welcome, {{ user?.name || 'User' }}</p>
+          <small>{{ user?.role | titlecase }}</small>
+        </div>
+
+        <ul class="space-y-2 font-medium flex-1 overflow-y-auto">
+          <li *ngFor="let link of links">
             <a
-              routerLink="/my-orders"
-              routerLinkActive="active"
-              class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+              [routerLink]="link.path"
+              routerLinkActive="bg-blue-600 text-white"
+              class="flex items-center p-3 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+              *ngIf="!link.role || link.role === user?.role"
             >
-              <span class="ms-3">My Orders</span>
+              <span>{{ link.label }}</span>
             </a>
           </li>
         </ul>
-        <button (click)="logout()" class=" w-full mt-auto focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Log Out</button>
+
+        <button
+          (click)="logout()"
+          class="mt-4 w-full text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5"
+        >
+          Log Out
+        </button>
       </div>
     </nav>
   `,
@@ -80,6 +50,16 @@ import { AuthService } from '../../services/auth/auth.service';
 export class SidebarComponent {
   private authService = inject(AuthService);
   user = this.authService.getUser();
+  activePath = window.location.pathname;
+
+  links = [
+    { path: '/home', label: 'Home' },
+    { path: '/products', label: 'Products' },
+    { path: '/users', label: 'User Purchases', role: 'admin' },
+    { path: '/user-management', label: 'User Management', role: 'admin' },
+    { path: '/profile', label: 'Profile' },
+    { path: '/my-orders', label: 'My Orders', role: 'user' },
+  ];
 
   logout() {
     this.authService.logout();
