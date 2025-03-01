@@ -43,6 +43,16 @@ import { AuthService } from '../../services/auth/auth.service';
               <span class="ms-3">User Purchases</span>
             </a>
           </li>
+          <li *ngIf="user?.role === 'admin'">
+          <li>
+            <a
+              routerLink="/user-management"
+              routerLinkActive="active"
+              class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+            >
+              <span class="ms-3">User Management</span>
+            </a>
+          </li>
         </ul>
         <button (click)="logout()" class=" w-full mt-auto focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Log Out</button>
       </div>

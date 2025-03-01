@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -22,6 +23,7 @@ export class LoginComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
   private formBuild = inject(FormBuilder);
+  private toastr = inject(ToastrService);
 
   public loginForm: FormGroup = this.formBuild.group({
     email: ['', Validators.required],
@@ -29,7 +31,6 @@ export class LoginComponent {
   });
 
   isProcessing = false;
-  showToast = false;
 
   login() {
     if (this.loginForm.invalid) return;
@@ -47,18 +48,19 @@ export class LoginComponent {
           localStorage.setItem('access_token', data.access_token);
           this.authService.setUser(data.user, data.access_token);
 
-          this.showToast = true;
+          this.toastr.success('Login successful! Redirecting...', 'Success');
 
           setTimeout(() => {
             this.router.navigate(['home']);
           }, 3000);
         } else {
-          alert('Error');
+          this.toastr.error('Login failed. Try again.', 'Error');
           this.isProcessing = false;
         }
       },
       error: (error) => {
-        console.log(error.message);
+        console.error(error.message);
+        this.toastr.error('An error occurred. Try again.', 'Error');
         this.isProcessing = false;
       },
     });

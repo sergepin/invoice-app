@@ -14,6 +14,7 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 import { Product } from '../../interfaces/product';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-products',
@@ -39,6 +40,7 @@ export class ProductsComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
   private fb = inject(FormBuilder);
+  private toastr = inject(ToastrService);
 
   products: any[] = [];
   isAdmin = this.authService.getUser()?.role === 'admin';
@@ -67,7 +69,10 @@ export class ProductsComponent implements OnInit {
           quantity: 1,
         }));
       },
-      error: (error) => console.error('Error fetching products', error),
+      error: (error) => {
+        console.error('Error fetching products', error);
+        this.toastr.error('Error loading products.', 'Error');
+      },
     });
   }
 
@@ -79,8 +84,14 @@ export class ProductsComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.productService.addProduct(result).subscribe({
-          next: () => this.loadProducts(),
-          error: (error) => console.error('Error adding product', error),
+          next: () => {
+            this.loadProducts();
+            this.toastr.success('Product added successfully!', 'Success');
+          },
+          error: (error) => {
+            console.error('Error adding product', error);
+            this.toastr.error('Failed to add product.', 'Error');
+          },
         });
       }
     });
@@ -95,8 +106,14 @@ export class ProductsComponent implements OnInit {
     dialogRef.afterClosed().subscribe((updatedProduct) => {
       if (updatedProduct) {
         this.productService.updateProduct(product._id, updatedProduct).subscribe({
-          next: () => this.loadProducts(),
-          error: (error) => console.error('Error updating product', error),
+          next: () => {
+            this.loadProducts();
+            this.toastr.success('Product updated successfully!', 'Success');
+          },
+          error: (error) => {
+            console.error('Error updating product', error);
+            this.toastr.error('Failed to update product.', 'Error');
+          },
         });
       }
     });
@@ -106,7 +123,7 @@ export class ProductsComponent implements OnInit {
     const quantity = product.quantity;
 
     if (quantity < 1 || quantity > product.stock) {
-      alert('Invalid quantity.');
+      this.toastr.warning('Invalid quantity.', 'Warning');
       return;
     }
 
@@ -116,7 +133,7 @@ export class ProductsComponent implements OnInit {
       const newQuantity = existingItem.quantity + quantity;
 
       if (newQuantity > product.stock) {
-        alert('Cannot add more than available stock.');
+        this.toastr.warning('Cannot add more than available stock.', 'Warning');
         return;
       }
 
@@ -130,12 +147,15 @@ export class ProductsComponent implements OnInit {
       });
     }
 
+    this.toastr.success(`${product.name} added to cart!`, 'Success');
     console.log('Cart:', this.cart);
   }
 
   goToCheckout() {
+    if (this.cart.length === 0) {
+      this.toastr.info('Your cart is empty.', 'Info');
+      return;
+    }
     this.router.navigate(['/checkout'], { state: { cart: this.cart } });
   }
-
-
 }
