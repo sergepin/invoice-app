@@ -1,0 +1,48 @@
+<div class="p-6 relative">
+  <h1 class="text-3xl font-extrabold mb-8 text-center text-blue-600">My Orders</h1>
+
+  <div *ngIf="orders.length > 0; else noOrders" class="space-y-6">
+    <div *ngFor="let order of orders" class="bg-white shadow-lg rounded-xl p-6 hover:shadow-2xl transition-shadow">
+      <p class="text-xl font-semibold text-gray-800">Order: {{ order.orderId }}</p>
+      <p class="text-gray-600">📅 Date: {{ order.date }}</p>
+      <p class="text-gray-600">💰 Total: {{ formatCurrency(order.totalAmount) }}</p>
+      <button
+        (click)="showOrderDetails(order)"
+        class="mt-4 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+      >
+        View Details
+      </button>
+    </div>
+  </div>
+
+  <ng-template #noOrders>
+    <p class="text-gray-600 text-center">You have no recent orders.</p>
+  </ng-template>
+
+  <div *ngIf="selectedOrder" class="fixed inset-0 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white p-8 rounded-xl shadow-2xl max-w-2xl w-full relative animate-fadeIn">
+      <button (click)="hideOrderDetails()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800">✖</button>
+
+      <h2 class="text-2xl font-bold mb-6 text-blue-600">Order Details</h2>
+      <p class="mb-2"><strong>🆔 Order ID:</strong> {{ selectedOrder.orderId }}</p>
+      <p class="mb-2"><strong>📅 Date:</strong> {{ selectedOrder.date }}</p>
+      <p class="mb-4"><strong>💰 Total:</strong> {{ formatCurrency(selectedOrder.totalAmount) }}</p>
+
+      <h3 class="text-lg font-semibold mt-6 mb-4">Products:</h3>
+      <ul class="list-none divide-y divide-gray-300">
+        <li *ngFor="let product of selectedOrder.products" class="py-4">
+          <p class="font-medium text-gray-800">🔹 {{ product.name }}</p>
+          <p class="text-gray-600">Qty: {{ product.quantity }}</p>
+          <p class="text-gray-600">Unit Price: {{ formatCurrency(product.unitPrice) }}</p>
+        </li>
+      </ul>
+
+      <button
+        (click)="hideOrderDetails()"
+        class="mt-8 px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors w-full"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</div>

@@ -10,6 +10,7 @@ import { PublicGuard } from './guards/public.guard';
 import { AuthGuard } from './guards/auth.guard';
 import { UserManagementComponent } from './pages/user-management/user-management.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { UserOrdersComponent } from './pages/user-orders/user-orders.component';
 
 export const routes: Routes = [
   { path: '', component: LoginComponent, canActivate: [PublicGuard] },
@@ -23,7 +24,8 @@ export const routes: Routes = [
       { path: 'checkout', component: CheckoutComponent, canActivate: [AuthGuard] },
       { path: 'users', component: UsersComponent, canActivate: [AuthGuard] },
       { path: 'user-management', component: UserManagementComponent, canActivate: [AuthGuard]},
-      { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]}
+      { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
+      { path: 'my-orders', component: UserOrdersComponent, canActivate: [AuthGuard]}
     ],
   },
 ];
